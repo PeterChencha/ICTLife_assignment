@@ -11,7 +11,7 @@ class StockTrack(object):
 
     def createYahooQuery(self):
         url = "https://finance.yahoo.com/quote/{}?p=AAPL&.tsrc=fin-srch".format(self.symbol)
-        print (url)
+        #print (url)
         try:
             page = urlopen(url)
             soup = bs4.BeautifulSoup(page,'html.parser')
@@ -23,31 +23,44 @@ class StockTrack(object):
     def processYahooQuery(self):
         unprocessed_info = self.createYahooQuery()
         price = unprocessed_info.find('div',{'class': 'My(6px) Pos(r) smartphone_Mt(6px)'}).find('span').text
+        #price = unprocessed_info.find('div',{'class': 'D(ib) Mend(20px)'}).find('span').text
         return price
 
 
-    def createQuery(self):
-        url = "https://google.com/search?q={self.symbol}"
+    def createGoogleQuery(self):
+        url = "https://google.com/search?q={}".format(self.symbol)
+        print (url)
         try:
-            page = urlopen(url)
-            soup = bs4.BeautifulSoup(page,'html.parser')
+            resp = requests.get(url)
+            soup = bs4.BeautifulSoup(resp.content,'html.parser')
             return soup
         except:
             print("Error Opening the Url")
 
-    def processQuery(self):
-        unprocessed_info = createQuery()
-        price = unprocessed_info.find('div',{'id': 'center_col'}).find('span').text
+    def processGoogleQuery(self):
+        unprocessed_info = self.createGoogleQuery()
+        #price = unprocessed_info.find('div',{'id': 'center_col'}).find('span').text
+        #print (unprocessed_info)
+        try:
+            price = unprocessed_info.find('div',{'class': 'OiIFo'}).find('span').text
+            return price
+        except:
+            error = "Not the div we want"
+            return error
 
 
 
 
-# input = raw_input ("Enter stock symbol :")
-# stockprice = StockTrack(input)
-# results = stockprice.getPrice()
-# print (results)
-
+#GOOGLE IMPLEMENTATION
 input = input ("Enter stock symbol :")
 stockprice = StockTrack(input)
-results = stockprice.processYahooQuery()
+results = stockprice.processGoogleQuery()
 print (results)
+
+
+
+#YAHOO IMPLEMENTATION
+# input = input ("Enter stock symbol :")
+# stockprice = StockTrack(input)
+# results = stockprice.processYahooQuery()
+# print (results)
