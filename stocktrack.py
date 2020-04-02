@@ -15,16 +15,19 @@ class StockTrack(object):
         try:
             page = urlopen(url)
             soup = bs4.BeautifulSoup(page,'html.parser')
-            #print (soup)
             return soup
         except:
             print("Error Opening the Url")
 
     def processYahooQuery(self):
         unprocessed_info = self.createYahooQuery()
-        price = unprocessed_info.find('div',{'class': 'My(6px) Pos(r) smartphone_Mt(6px)'}).find('span').text
-        #price = unprocessed_info.find('div',{'class': 'D(ib) Mend(20px)'}).find('span').text
-        return price
+        try:
+            price = unprocessed_info.find('div',{'class': 'My(6px) Pos(r) smartphone_Mt(6px)'}).find('span').text
+            return price
+        except:
+            error = "Not the div we want"
+            return error
+
 
 
     def createGoogleQuery(self):
