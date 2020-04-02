@@ -10,14 +10,21 @@ class StockTrack(object):
         self.symbol = symbol
 
     def createYahooQuery(self):
-        url = "https://finance.yahoo.com/quote/AAPL?p=AAPL&.tsrc=fin-srch"
+        url = "https://finance.yahoo.com/quote/{}?p=AAPL&.tsrc=fin-srch".format(self.symbol)
+        print (url)
         try:
             page = urlopen(url)
             soup = bs4.BeautifulSoup(page,'html.parser')
-            price = soup.find('div',{'class': 'My(6px) Pos(r) smartphone_Mt(6px)'}).find('span').text
-            return price
+            #print (soup)
+            return soup
         except:
             print("Error Opening the Url")
+
+    def processYahooQuery(self):
+        unprocessed_info = self.createYahooQuery()
+        price = unprocessed_info.find('div',{'class': 'My(6px) Pos(r) smartphone_Mt(6px)'}).find('span').text
+        return price
+
 
     def createQuery(self):
         url = "https://google.com/search?q={self.symbol}"
@@ -34,23 +41,13 @@ class StockTrack(object):
 
 
 
-    def getPrice(self):
-        try:
-            if self.symbol == "aapl":
-                return 254.29
-            else:
-                error = "Symbol not found"
-                return error
-        except Exception as e:
-            raise e
-
 
 # input = raw_input ("Enter stock symbol :")
 # stockprice = StockTrack(input)
 # results = stockprice.getPrice()
 # print (results)
 
-input = "aapl"
+input = input ("Enter stock symbol :")
 stockprice = StockTrack(input)
-results = stockprice.createYahooQuery()
+results = stockprice.processYahooQuery()
 print (results)
