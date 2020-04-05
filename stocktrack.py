@@ -13,7 +13,8 @@ class StockTrack(object):
         self.stockprice = {}
 
     def verifySymbol(self):
-        if type(self.symbol) == 'str':
+        #TEST IF SYMBOL IS VALID
+        if type(self.symbol) == "class 'str'":
             return True
         else:
             return False
@@ -41,6 +42,7 @@ class StockTrack(object):
 
 
     def createGoogleQuery(self):
+        #CONSTRUCT THE GOOGLE QUERY AND SUBMIT QUERY
         url = "https://www.google.com/search?tbm=fin&q={}".format(self.symbol)
         #print (url)
         try:
@@ -53,6 +55,7 @@ class StockTrack(object):
             print("Error Opening the Url")
 
     def processGoogleQuery(self):
+        #PROCESS THE RESULTS OF THE QUERY USING REGEX
         unprocessed_query = self.createGoogleQuery()
         pattern = '><span class="(.*?)" jsdata="(.*?)" jsname="(.*?)">(?:\d+(?:\.\d*)?|\.\d+)'
         list_of_items = re.search(pattern, unprocessed_query)
