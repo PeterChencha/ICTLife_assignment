@@ -48,14 +48,22 @@ class StockTrack(object):
             req = Request(url)
             req.add_header('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:65.0) Gecko/20100101 Firefox/65.0')
             resp = urlopen(req)
-            html = resp.readlines()
+            html = resp.read().decode('utf-8')
             return html
         except:
             print("Error Opening the Url")
 
     def processGoogleQuery(self):
         unprocessed_query = self.createGoogleQuery()
-        return unprocessed_query
+        #print (unprocessed_query)
+        #ADD NUMBER IN REGEX
+        pattern = '><span class="(.*?)" jsdata="(.*?)" jsname="(.*?)">(?:\d+(?:\.\d*)?|\.\d+)'
+        list_of_items = re.search(pattern, unprocessed_query)
+        span_with_price = list_of_items.group(0)
+        price = span_with_price[-6:]
+        self.stockprice['name'] = self.symbol
+        self.stockprice['current_price'] = '{}USD'.format(price)
+        return self.stockprice
 
 
 #GOOGLE IMPLEMENTATION
