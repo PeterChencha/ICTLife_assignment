@@ -19,8 +19,8 @@ git pull https://github.com/extraordinaire01/ICTLife_assignment.git
 # install virtualenv
 pip install virtualenv
 # Create vitual env for project
-cd to project folder then run
-virtualenv myprojectenv in this case ICTLife_assignmentenv
+cd to project folder and run
+virtualenv ICTLife_assignmentenv
 #Activate vitual env
 source ICTLife_assignmentenv/bin/activate
 # install requirements
