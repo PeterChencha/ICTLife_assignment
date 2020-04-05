@@ -69,7 +69,7 @@ class StockTrack(object):
 
 
 #GOOGLE IMPLEMENTATION
-input = input ("Enter stock symbol (kindly note only USA Stocks) :")
+input = input ("Enter stock symbol (kindly note only USA Stocks eg aapl) :")
 stockprice = StockTrack(input)
 results = stockprice.processGoogleQuery()
 print (results)
