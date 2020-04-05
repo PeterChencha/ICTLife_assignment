@@ -17,7 +17,7 @@ https://www.python.org/downloads/
 # clone repo
 git pull https://github.com/extraordinaire01/ICTLife_assignment.git
 # install virtualenv
-pip3 install virtualenv
+pip install virtualenv
 # Create vitual env for project
 cd to project folder then run
 virtualenv myprojectenv in this case ICTLife_assignmentenv
@@ -27,6 +27,11 @@ source ICTLife_assignmentenv/bin/activate
 pip install -r requirements.txt
 # Run google scrap query
 python stocktrack.py
+
+# Expected input
+aapl
+#Expected output
+{'name': 'aapl', 'current_price': '241.41 USD'}
 ```
 
 * [Python3](https://www.python.org/) - Python is a programming language that lets you work quickly
