@@ -1,7 +1,10 @@
 import bs4
 import requests
 from bs4 import BeautifulSoup
-from urllib.request import urlopen
+from urllib.request import urlopen, Request
+import re
+import html.parser
+import json
 
 class StockTrack(object):
     """Provided a stock symbol find its current price."""
@@ -10,9 +13,14 @@ class StockTrack(object):
         self.symbol = symbol
         self.stockprice = {}
 
+    def verifySymbol(self):
+        if type(self.symbol) == 'str':
+            return True
+        else:
+            return False
+
     def createYahooQuery(self):
         url = "https://finance.yahoo.com/quote/{}?p={}&.tsrc=fin-srch".format(self.symbol, self.symbol)
-        #print (url)
         try:
             page = urlopen(url)
             soup = bs4.BeautifulSoup(page,'html.parser')
@@ -34,46 +42,32 @@ class StockTrack(object):
 
 
     def createGoogleQuery(self):
-        url = "https://google.com/search?q={}".format(self.symbol)
+        url = "https://www.google.com/search?tbm=fin&q={}".format(self.symbol)
         print (url)
         try:
-            resp = requests.get(url)
-            soup = bs4.BeautifulSoup(resp.content,'html.parser')
-            return soup
+            req = Request(url)
+            req.add_header('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:65.0) Gecko/20100101 Firefox/65.0')
+            resp = urlopen(req)
+            html = resp.readlines()
+            return html
         except:
             print("Error Opening the Url")
 
     def processGoogleQuery(self):
-        unprocessed_info = self.createGoogleQuery()
-        sections = unprocessed_info.find_all('g')
-        #print (sections)
-        return sections
-        #price = unprocessed_info.find('div',{'id': 'center_col'}).find('span').text
-        #print (unprocessed_info)
-
-        # try:
-        #     self.price['name'] = sections[0].div.text
-        #     spans = sections[1].find_all('div', recursive=False)[1].find_all('span', recursive=False)
-        #     self.price['current_price'] = spans[0].text
-        #     self.price['current_change'] = spans[1].text
-        #     return self.price
-        # except:
-        #     error = "Not the div we want"
-        #     return error
-
-
+        unprocessed_query = self.createGoogleQuery()
+        return unprocessed_query
 
 
 #GOOGLE IMPLEMENTATION
-# input = input ("Enter stock symbol :")
-# stockprice = StockTrack(input)
-# results = stockprice.processGoogleQuery()
-# print (results)
-
-
-
-#YAHOO IMPLEMENTATION
 input = input ("Enter stock symbol :")
 stockprice = StockTrack(input)
-results = stockprice.processYahooQuery()
+results = stockprice.processGoogleQuery()
 print (results)
+
+
+
+# #YAHOO IMPLEMENTATION
+# input = input ("Enter stock symbol :")
+# stockprice = StockTrack(input)
+# results = stockprice.processYahooQuery()
+# print (results)
