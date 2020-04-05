@@ -42,7 +42,7 @@ class StockTrack(object):
 
     def createGoogleQuery(self):
         url = "https://www.google.com/search?tbm=fin&q={}".format(self.symbol)
-        print (url)
+        #print (url)
         try:
             req = Request(url)
             req.add_header('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:65.0) Gecko/20100101 Firefox/65.0')
