@@ -4,7 +4,6 @@ from bs4 import BeautifulSoup
 from urllib.request import urlopen, Request
 import re
 import html.parser
-import json
 
 class StockTrack(object):
     """Provided a stock symbol find its current price."""
@@ -33,7 +32,7 @@ class StockTrack(object):
         try:
             price = unprocessed_info.find('div',{'class': 'My(6px) Pos(r) smartphone_Mt(6px)'}).find('span').text
             self.stockprice['name'] = self.symbol
-            self.stockprice['current_price'] = '{}USD'.format(price)
+            self.stockprice['current_price'] = '{} USD'.format(price)
             return self.stockprice
         except:
             error = "Not the div we want"
@@ -55,19 +54,22 @@ class StockTrack(object):
 
     def processGoogleQuery(self):
         unprocessed_query = self.createGoogleQuery()
-        #print (unprocessed_query)
-        #ADD NUMBER IN REGEX
         pattern = '><span class="(.*?)" jsdata="(.*?)" jsname="(.*?)">(?:\d+(?:\.\d*)?|\.\d+)'
         list_of_items = re.search(pattern, unprocessed_query)
-        span_with_price = list_of_items.group(0)
-        price = span_with_price[-6:]
-        self.stockprice['name'] = self.symbol
-        self.stockprice['current_price'] = '{}USD'.format(price)
-        return self.stockprice
+        if list_of_items:
+            span_with_price = list_of_items.group(0)
+            price = span_with_price[-6:]
+            self.stockprice['name'] = self.symbol
+            self.stockprice['current_price'] = '{} USD'.format(price)
+            return self.stockprice
+        else:
+            error = "Invalid stock symbol: {}".format(self.symbol)
+            return error
+
 
 
 #GOOGLE IMPLEMENTATION
-input = input ("Enter stock symbol :")
+input = input ("Enter stock symbol (kindly note only USA Stocks) :")
 stockprice = StockTrack(input)
 results = stockprice.processGoogleQuery()
 print (results)
