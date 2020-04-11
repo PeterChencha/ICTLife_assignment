@@ -23,10 +23,19 @@ class StockTrack(object):
                language = row["Language"]
                iso_code = row["ISO 639-1 code"]
                self.languages[iso_code] = language
-        return (self.languages)
+        return self.languages
 
     def readAvailableCurrencies(self):
-        pass
+        with open('Cheap.Stocks.Internationalization.Currencies.csv', newline='') as csvfile:
+           reader = csv.DictReader(csvfile)
+           #headers = next(reader) SKIP HEADERS
+           for row in reader:
+               country = row["Country"]
+               currency = row["Currency"]
+               code = row["ISO 4217 Code"]
+               self.supportedCurrency[country] = currency
+               self.supportedCurrency[code] = code
+        return self.supportedCurrency
 
     def createGoogleQuery(self):
         #CONSTRUCT THE GOOGLE QUERY AND SUBMIT QUERY
@@ -61,7 +70,7 @@ class StockTrack(object):
 #GOOGLE IMPLEMENTATION
 input = input ("Enter stock symbol (kindly note only USA Stocks eg aapl) :")
 stockprice = StockTrack(input)
-results = stockprice.readAvailableLanguages()
+results = stockprice.readAvailableCurrencies()
 print (results)
 
 
