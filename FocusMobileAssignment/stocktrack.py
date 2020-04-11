@@ -16,32 +16,8 @@ class StockTrack(object):
         self.preferred_language = preferred_language
         self.preferred_currency = preferred_currency
         self.stockprice = {}
-        self.languages = {}
-        self.supportedCurrency = {}
         self.currencylayer_accesskey = "189de90f4e628614d07092e5467483a2"
         self.fixeraccesskey = "d3024595d962553e437d1c9a6948dc55"
-
-    def readAvailableLanguages(self):
-        with open('Cheap.Stocks.Internationalization.Languages.csv', newline='') as csvfile:
-           reader = csv.DictReader(csvfile)
-           #headers = next(reader) SKIP HEADERS
-           for row in reader:
-               language = row["Language"]
-               iso_code = row["ISO 639-1 code"]
-               self.languages[iso_code] = language
-        return self.languages
-
-    def readAvailableCurrencies(self):
-        with open('Cheap.Stocks.Internationalization.Currencies.csv', newline='') as csvfile:
-           reader = csv.DictReader(csvfile)
-           #headers = next(reader) SKIP HEADERS
-           for row in reader:
-               country = row["Country"]
-               currency = row["Currency"]
-               code = row["ISO 4217 Code"]
-               complete = currency + ", symbol=" + code
-               self.supportedCurrency[country] = complete
-        return self.supportedCurrency
 
     def createGoogleQuery(self):
         #CONSTRUCT THE GOOGLE QUERY AND SUBMIT QUERY
@@ -136,13 +112,6 @@ print("Available Languages are: {}".format(supportedLanguage))
 # results = stockprice.getConversationRateLayer()
 # print (results)
 
-
-
-# #YAHOO IMPLEMENTATION
-# input = input ("Enter stock symbol :")
-#stockprice = StockTrack(input)
-# results = stockprice.processYahooQuery()
-# print (results)
 
 
 #TEST API FUNCTIONS AND TRANSLATOR
