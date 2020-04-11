@@ -39,8 +39,8 @@ class StockTrack(object):
                country = row["Country"]
                currency = row["Currency"]
                code = row["ISO 4217 Code"]
-               self.supportedCurrency[country] = currency
-               self.supportedCurrency[code] = code
+               complete = currency + ", symbol=" + code
+               self.supportedCurrency[country] = complete
         return self.supportedCurrency
 
     def createGoogleQuery(self):
@@ -82,8 +82,50 @@ class StockTrack(object):
             rate = rate_data['quotes']['USD{}'.format(self.preferred_currency)]
             return rate
 
+    def getConversationRateFixer(self):
+        #FOR THE FREE PLAN, BASE USD IS NOT SUPPORTED THUS FOR OUR APP ITS NOT HELPFUL
+        url = "http://data.fixer.io/api/latest?access_key={}&base=USD&symbols={}".format(self.fixeraccesskey, self.preferred_currency)
+        req = requests.get(url)
+        rate_data = req.json()
+        if rate_data['success'] == False:
+            error = 'Query failed'
+            return error
+        else:
+            rate = rate_data['quotes']['USD{}'.format(self.preferred_currency)]
+            return rate
 
 
+
+
+#DISPLAY SUPPORTED CURRENCIES.
+def readAvailableCurrencies():
+    supportedCurrency = {}
+    with open('Cheap.Stocks.Internationalization.Currencies.csv', newline='') as csvfile:
+       reader = csv.DictReader(csvfile)
+       for row in reader:
+           country = row["Country"]
+           currency = row["Currency"]
+           code = row["ISO 4217 Code"]
+           complete = currency + ", symbol = " + code
+           supportedCurrency[country] = complete
+    return supportedCurrency
+
+supportedCurrency = readAvailableCurrencies()
+print("Supported Currencies are: {}".format(supportedCurrency))
+print('\n')
+
+#DISPLAY SUPPORTED LANGUAGES
+def readAvailableLanguages():
+    supportedLanguage = {}
+    with open('Cheap.Stocks.Internationalization.Languages.csv', newline='') as csvfile:
+       reader = csv.DictReader(csvfile)
+       for row in reader:
+           language = row["Language"]
+           iso_code = row["ISO 639-1 code"]
+           supportedLanguage[iso_code] = language
+    return supportedLanguage
+supportedLanguage = readAvailableLanguages()
+print("Available Languages are: {}".format(supportedLanguage))
 
 
 #GOOGLE IMPLEMENTATION
@@ -103,36 +145,38 @@ class StockTrack(object):
 # print (results)
 
 
-def getConversationRateLayer():
-    url = "http://apilayer.net/api/live?access_key=189de90f4e628614d07092e5467483a2&currencies=DZD&source=USD&format=1"
-    req = requests.get(url)
-    rate_data = req.json()
-    if rate_data['success'] == False:
-        error = 'Query failed'
-        return error
-    else:
-        rate = rate_data['quotes']['USDDZD']
-        return rate
+#TEST API FUNCTIONS AND TRANSLATOR
 
-
-def getConversationRateFixer():
-    #FOR THE FREE PLAN, BASE USD IS NOT SUPPORTED THUS FOR OUR APP ITS NOT HELPFUL
-    url = "http://data.fixer.io/api/latest?access_key=bf1169a26f96a42fa5ac213e45b19196&base=USD&symbols=DZD"
-    req = requests.get(url)
-    rate_data = req.json()
-    if rate_data['success'] == False:
-        error = 'Query failed'
-        return error
-    else:
-        rate = rate_data['quotes']['USDDZD']
-        return rate
-
-def convertLanguageToPreferred():
-    response = "The current price for AAPL is"
-    translator = Translator()
-    result = translator.translate(response, dest='fr')
-    return result.text
-
-
-result = convertLanguageToPreferred()
-print(result)
+# def getConversationRateLayer():
+#     url = "http://apilayer.net/api/live?access_key=189de90f4e628614d07092e5467483a2&currencies=DZD&source=USD&format=1"
+#     req = requests.get(url)
+#     rate_data = req.json()
+#     if rate_data['success'] == False:
+#         error = 'Query failed'
+#         return error
+#     else:
+#         rate = rate_data['quotes']['USDDZD']
+#         return rate
+#
+#
+# def getConversationRateFixer():
+#     #FOR THE FREE PLAN, BASE USD IS NOT SUPPORTED THUS FOR OUR APP ITS NOT HELPFUL
+#     url = "http://data.fixer.io/api/latest?access_key=bf1169a26f96a42fa5ac213e45b19196&base=USD&symbols=DZD"
+#     req = requests.get(url)
+#     rate_data = req.json()
+#     if rate_data['success'] == False:
+#         error = 'Query failed'
+#         return error
+#     else:
+#         rate = rate_data['quotes']['USDDZD']
+#         return rate
+#
+# def convertLanguageToPreferred():
+#     response = "The current price for AAPL is"
+#     translator = Translator()
+#     result = translator.translate(response, dest='fr')
+#     return result.text
+#
+#
+# result = convertLanguageToPreferred()
+# print(result)
