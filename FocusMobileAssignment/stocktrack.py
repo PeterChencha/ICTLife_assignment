@@ -6,6 +6,7 @@ import re
 import html.parser
 import csv
 from googletrans import Translator
+#from translate import Translator
 
 class StockTrack(object):
     """Provided a stock symbol find its current price."""
@@ -127,10 +128,10 @@ def getConversationRateFixer():
         return rate
 
 def convertLanguageToPreferred():
-    response = "The current price for"
+    response = "The current price for AAPL is"
     translator = Translator()
     result = translator.translate(response, dest='fr')
-    return result
+    return result.text
 
 
 result = convertLanguageToPreferred()
