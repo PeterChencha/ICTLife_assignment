@@ -41,7 +41,7 @@ class StockTrack(object):
             span_with_price = list_of_items.group(0)
             price = span_with_price[-6:]
             self.stockprice['name'] = self.symbol
-            self.stockprice['current_price'] = '{} USD'.format(price)
+            self.stockprice['current_price'] = price
             return self.stockprice
         else:
             error = "Invalid stock symbol: {}".format(self.symbol)
@@ -69,6 +69,22 @@ class StockTrack(object):
         else:
             rate = rate_data['quotes']['USD{}'.format(self.preferred_currency)]
             return rate
+
+    def convertToPreferredCurrency(self):
+        self.processGoogleQuery()
+        price = self.stockprice['current_price']
+        conversion_rate = self.getConversationRateLayer()
+        result = float(price) * conversion_rate
+        self.stockprice['current_price'] = '{} {}'.format(result, self.preferred_currency)
+        return result
+
+
+    def convertLanguageToPreferred(self):
+        preferred_price = self.convertToPreferredCurrency()
+        response = "The current price for {} is {} {}".format(self.symbol, preferred_price, self.preferred_currency)
+        translator = Translator()
+        result = translator.translate(response, dest=self.preferred_language)
+        return result.text
 
 
 
@@ -112,7 +128,7 @@ stock_symbol = input ("Enter stock symbol (kindly note only USA Stocks eg aapl) 
 preferred_language = input ("What is your preferred language:")
 preferred_currency = input ("What is your preferred currency:")
 stockprice = StockTrack(stock_symbol, preferred_language, preferred_currency)
-results = stockprice.getConversationRateLayer()
+results = stockprice.convertLanguageToPreferred()
 print (results)
 
 
