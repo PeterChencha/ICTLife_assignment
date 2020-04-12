@@ -42,7 +42,7 @@ class StockTrack(object):
             price = span_with_price[-6:]
             self.stockprice['name'] = self.symbol
             self.stockprice['current_price'] = price
-            print(price)
+            #print(price)
             return self.stockprice
         else:
             error = "Invalid stock symbol: {}".format(self.symbol)
@@ -124,9 +124,9 @@ print("Available Languages are: {}".format(supportedLanguage))
 print('\n')
 
 #REQUEST FOR USER INPUTS FOR PROCESSING
-stock_symbol = input ("Enter stock symbol (kindly note only USA Stocks eg aapl) :")
-preferred_language = input ("What is your preferred language:")
-preferred_currency = input ("What is your preferred currency:")
+stock_symbol = input ("Enter stock symbol (kindly note only USA Stocks eg aapl) :").strip()
+preferred_language = input ("What is your preferred language:").strip()
+preferred_currency = input ("What is your preferred currency:").strip()
 print('\n')
 stockprice = StockTrack(stock_symbol, preferred_language, preferred_currency)
 results = stockprice.convertLanguageToPreferred()
