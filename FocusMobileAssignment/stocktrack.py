@@ -20,6 +20,7 @@ class StockTrack(object):
         self.fixeraccesskey = "d3024595d962553e437d1c9a6948dc55"
         self.errors = []
 
+    #FOR ERROR HANDLING I'LL BE RETURNING ZERO SO THAT THE NEXT CALLED FUNCTION KNOWS THERE WAS AN ERROR IN THE FLOW
     def createGoogleQuery(self):
         #CONSTRUCT THE GOOGLE QUERY AND SUBMIT QUERY
         url = "https://www.google.com/search?tbm=fin&q={}".format(self.symbol)
