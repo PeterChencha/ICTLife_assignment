@@ -92,6 +92,7 @@ class StockTrack(object):
 
 
 #DISPLAY SUPPORTED CURRENCIES.
+print('\n')
 def readAvailableCurrencies():
     supportedCurrency = {}
     with open('Cheap.Stocks.Internationalization.Currencies.csv', newline='') as csvfile:
@@ -120,12 +121,13 @@ def readAvailableLanguages():
     return supportedLanguage
 supportedLanguage = readAvailableLanguages()
 print("Available Languages are: {}".format(supportedLanguage))
-
+print('\n')
 
 #REQUEST FOR USER INPUTS FOR PROCESSING
 stock_symbol = input ("Enter stock symbol (kindly note only USA Stocks eg aapl) :")
 preferred_language = input ("What is your preferred language:")
 preferred_currency = input ("What is your preferred currency:")
+print('\n')
 stockprice = StockTrack(stock_symbol, preferred_language, preferred_currency)
 results = stockprice.convertLanguageToPreferred()
 print (results)
