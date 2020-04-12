@@ -18,7 +18,9 @@ class StockTrack(object):
         self.stockprice = {}
         self.currencylayer_accesskey = "189de90f4e628614d07092e5467483a2"
         self.fixeraccesskey = "d3024595d962553e437d1c9a6948dc55"
+        self.errors = []
 
+    #FOR ERROR HANDLING I'LL BE RETURNING ZERO SO THAT THE NEXT CALLED FUNCTION KNOWS THERE WAS AN ERROR IN THE FLOW
     def createGoogleQuery(self):
         #CONSTRUCT THE GOOGLE QUERY AND SUBMIT QUERY
         url = "https://www.google.com/search?tbm=fin&q={}".format(self.symbol)
@@ -30,23 +32,28 @@ class StockTrack(object):
             html = resp.read().decode('utf-8')
             return html
         except:
-            print("Error Opening the Url")
+            error = "Error Opening the Url."
+            self.errors.append(error)
+            return 0
 
     def processGoogleQuery(self):
         #PROCESS THE RESULTS OF THE QUERY USING REGEX
         unprocessed_query = self.createGoogleQuery()
-        pattern = '><span class="(.*?)" jsdata="(.*?)" jsname="(.*?)">(?:\d+(?:\.\d*)?|\.\d+)'
-        list_of_items = re.search(pattern, unprocessed_query)
-        if list_of_items:
-            span_with_price = list_of_items.group(0)
-            price = span_with_price[-6:]
-            self.stockprice['name'] = self.symbol
-            self.stockprice['current_price'] = price
-            #print(price)
-            return self.stockprice
+        if unprocessed_query == 0:
+            return 0
         else:
-            error = "Invalid stock symbol: {}".format(self.symbol)
-            return error
+            pattern = '><span class="(.*?)" jsdata="(.*?)" jsname="(.*?)">(?:\d+(?:\.\d*)?|\.\d+)'
+            list_of_items = re.search(pattern, unprocessed_query)
+            if list_of_items:
+                span_with_price = list_of_items.group(0)
+                price = span_with_price[-6:]
+                self.stockprice['name'] = self.symbol
+                self.stockprice['current_price'] = price
+                return self.stockprice
+            else:
+                error = "Invalid stock symbol: {}".format(self.symbol)
+                self.errors.append(error)
+                return 0
 
     def getConversionRateLayer(self):
         #GET CONVERSION RATE FROM LAYER API
@@ -54,8 +61,9 @@ class StockTrack(object):
         req = requests.get(url)
         rate_data = req.json()
         if rate_data['success'] == False:
-            error = 'Query failed'
-            return error
+            error = 'Conversion Query failed'
+            self.errors.append(error)
+            return 0
         else:
             rate = rate_data['quotes']['USD{}'.format(self.preferred_currency)]
             return rate
@@ -73,24 +81,21 @@ class StockTrack(object):
             return rate
 
     def convertToPreferredCurrency(self):
-        self.processGoogleQuery()
-        try:
+        processedquery = self.processGoogleQuery()
+        conversion_rate = self.getConversionRateLayer()
+        if processedquery == 0 or conversion_rate == 0:
+            return 0
+        else:
             price = self.stockprice['current_price']
-            conversion_rate = self.getConversionRateLayer()
             result = float(price) * conversion_rate
             self.stockprice['current_price'] = '{} {}'.format(result, self.preferred_currency)
             return result
-        except Exception as e:
-            error = "Invalid stock symbol {} and error is {}".format(self.symbol, e)
-            #print(error)
-            return 0
 
 
     def convertLanguageToPreferred(self):
         preferred_price = self.convertToPreferredCurrency()
         if preferred_price == 0:
-            error = "Invalid stock symbol {}".format(self.symbol)
-            return error
+            return self.errors
         else:
             response = "The current price for {} is".format(self.symbol)
             translator = Translator()
