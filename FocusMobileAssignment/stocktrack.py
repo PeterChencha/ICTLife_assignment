@@ -61,7 +61,7 @@ class StockTrack(object):
             return rate
 
     def getConversionRateFixer(self):
-        #FOR THE FREE PLAN, BASE "USD" IS NOT SUPPORTED THUS FOR OUR APP ITS NOT HELPFUL SINCE OUR SCRAPPED STOCKS ARE IN US
+        #FOR THE FREE PLAN, BASE "USD" IS NOT SUPPORTED THUS FOR OUR APP ITS NOT HELPFUL SINCE OUR SCRAPPED STOCKS ARE IN USD
         url = "http://data.fixer.io/api/latest?access_key={}&base=USD&symbols={}".format(self.fixeraccesskey, self.preferred_currency)
         req = requests.get(url)
         rate_data = req.json()
