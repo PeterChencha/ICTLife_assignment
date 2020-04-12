@@ -35,10 +35,19 @@ aapl
 
 #To run second assignment
 
+#Install additional packages inside virtual environment
+pip install -r requirements.txt
 #From project directory
 cd FocusMobileAssignment
 #Run second assignment
 python stocktrack.py
+
+# Expected input
+Enter stock symbol (kindly note only USA Stocks eg aapl or msft) :MSFT
+What is your preferred language(leave blank for english-en):pt
+What is your preferred currency(leave blank for USD):UGX
+#Expected output
+O preço atual para MSFT é 621396.1909325599UGX
 ```
 
 * [Python3](https://www.python.org/) - Python is a programming language that lets you work quickly
