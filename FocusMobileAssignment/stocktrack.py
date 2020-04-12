@@ -42,12 +42,14 @@ class StockTrack(object):
             price = span_with_price[-6:]
             self.stockprice['name'] = self.symbol
             self.stockprice['current_price'] = price
+            print(price)
             return self.stockprice
         else:
             error = "Invalid stock symbol: {}".format(self.symbol)
             return error
 
-    def getConversationRateLayer(self):
+    def getConversionRateLayer(self):
+        #GET CONVERSION RATE FROM LAYER API
         url = "http://apilayer.net/api/live?access_key={}&currencies={}&source=USD&format=1".format(self.currencylayer_accesskey, self.preferred_currency)
         req = requests.get(url)
         rate_data = req.json()
@@ -58,8 +60,8 @@ class StockTrack(object):
             rate = rate_data['quotes']['USD{}'.format(self.preferred_currency)]
             return rate
 
-    def getConversationRateFixer(self):
-        #FOR THE FREE PLAN, BASE "USD" IS NOT SUPPORTED THUS FOR OUR APP ITS NOT HELPFUL
+    def getConversionRateFixer(self):
+        #FOR THE FREE PLAN, BASE "USD" IS NOT SUPPORTED THUS FOR OUR APP ITS NOT HELPFUL SINCE OUR SCRAPPED STOCKS ARE IN US
         url = "http://data.fixer.io/api/latest?access_key={}&base=USD&symbols={}".format(self.fixeraccesskey, self.preferred_currency)
         req = requests.get(url)
         rate_data = req.json()
@@ -73,7 +75,7 @@ class StockTrack(object):
     def convertToPreferredCurrency(self):
         self.processGoogleQuery()
         price = self.stockprice['current_price']
-        conversion_rate = self.getConversationRateLayer()
+        conversion_rate = self.getConversionRateLayer()
         result = float(price) * conversion_rate
         self.stockprice['current_price'] = '{} {}'.format(result, self.preferred_currency)
         return result
