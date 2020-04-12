@@ -42,7 +42,7 @@ class StockTrack(object):
             price = span_with_price[-6:]
             self.stockprice['name'] = self.symbol
             self.stockprice['current_price'] = price
-            print(price)
+            #print(price)
             return self.stockprice
         else:
             error = "Invalid stock symbol: {}".format(self.symbol)
@@ -61,7 +61,7 @@ class StockTrack(object):
             return rate
 
     def getConversionRateFixer(self):
-        #FOR THE FREE PLAN, BASE "USD" IS NOT SUPPORTED THUS FOR OUR APP ITS NOT HELPFUL SINCE OUR SCRAPPED STOCKS ARE IN US
+        #FOR THE FREE PLAN, BASE "USD" IS NOT SUPPORTED THUS FOR OUR APP ITS NOT HELPFUL SINCE OUR SCRAPPED STOCKS ARE IN USD
         url = "http://data.fixer.io/api/latest?access_key={}&base=USD&symbols={}".format(self.fixeraccesskey, self.preferred_currency)
         req = requests.get(url)
         rate_data = req.json()
@@ -74,24 +74,34 @@ class StockTrack(object):
 
     def convertToPreferredCurrency(self):
         self.processGoogleQuery()
-        price = self.stockprice['current_price']
-        conversion_rate = self.getConversionRateLayer()
-        result = float(price) * conversion_rate
-        self.stockprice['current_price'] = '{} {}'.format(result, self.preferred_currency)
-        return result
+        try:
+            price = self.stockprice['current_price']
+            conversion_rate = self.getConversionRateLayer()
+            result = float(price) * conversion_rate
+            self.stockprice['current_price'] = '{} {}'.format(result, self.preferred_currency)
+            return result
+        except Exception as e:
+            error = "Invalid stock symbol {} and error is {}".format(self.symbol, e)
+            #print(error)
+            return 0
 
 
     def convertLanguageToPreferred(self):
         preferred_price = self.convertToPreferredCurrency()
-        response = "The current price for {} is {} {}".format(self.symbol, preferred_price, self.preferred_currency)
-        translator = Translator()
-        result = translator.translate(response, dest=self.preferred_language)
-        return result.text
+        if preferred_price == 0:
+            error = "Invalid stock symbol {}".format(self.symbol)
+            return error
+        else:
+            response = "The current price for {} is {} {}".format(self.symbol, preferred_price, self.preferred_currency)
+            translator = Translator()
+            result = translator.translate(response, dest=self.preferred_language)
+            return result.text
 
 
 
 
 #DISPLAY SUPPORTED CURRENCIES.
+print('\n')
 def readAvailableCurrencies():
     supportedCurrency = {}
     with open('Cheap.Stocks.Internationalization.Currencies.csv', newline='') as csvfile:
@@ -101,7 +111,7 @@ def readAvailableCurrencies():
            currency = row["Currency"]
            code = row["ISO 4217 Code"]
            complete = currency + ", symbol = " + code
-           supportedCurrency[country] = complete
+           supportedCurrency[country] = code
     return supportedCurrency
 
 supportedCurrency = readAvailableCurrencies()
@@ -120,50 +130,26 @@ def readAvailableLanguages():
     return supportedLanguage
 supportedLanguage = readAvailableLanguages()
 print("Available Languages are: {}".format(supportedLanguage))
+print('\n')
 
+#REQUEST FOR USER INPUTS FOR PROCESSING. STRIP TO REMOVE WHITESPACE.
+stock_symbol = input ("Enter stock symbol (kindly note only USA Stocks eg aapl or msft) :").strip()
+preferred_language = input ("What is your preferred language(leave blank for english-en):").strip()
+if len(preferred_language) == 0:
+    preferred_language = "en"
+preferred_currency = input ("What is your preferred currency(leave blank for USD):").strip()
+if len(preferred_currency) == 0:
+    preferred_currency = "USD"
+print('\n')
 
-#REQUEST FOR USER INPUTS FOR PROCESSING
-stock_symbol = input ("Enter stock symbol (kindly note only USA Stocks eg aapl) :")
-preferred_language = input ("What is your preferred language:")
-preferred_currency = input ("What is your preferred currency:")
-stockprice = StockTrack(stock_symbol, preferred_language, preferred_currency)
-results = stockprice.convertLanguageToPreferred()
-print (results)
-
-
-
-#TEST API FUNCTIONS AND TRANSLATOR
-
-# def getConversationRateLayer():
-#     url = "http://apilayer.net/api/live?access_key=189de90f4e628614d07092e5467483a2&currencies=DZD&source=USD&format=1"
-#     req = requests.get(url)
-#     rate_data = req.json()
-#     if rate_data['success'] == False:
-#         error = 'Query failed'
-#         return error
-#     else:
-#         rate = rate_data['quotes']['USDDZD']
-#         return rate
-#
-#
-# def getConversationRateFixer():
-#     #FOR THE FREE PLAN, BASE USD IS NOT SUPPORTED THUS FOR OUR APP ITS NOT HELPFUL
-#     url = "http://data.fixer.io/api/latest?access_key=bf1169a26f96a42fa5ac213e45b19196&base=USD&symbols=DZD"
-#     req = requests.get(url)
-#     rate_data = req.json()
-#     if rate_data['success'] == False:
-#         error = 'Query failed'
-#         return error
-#     else:
-#         rate = rate_data['quotes']['USDDZD']
-#         return rate
-#
-# def convertLanguageToPreferred():
-#     response = "The current price for AAPL is"
-#     translator = Translator()
-#     result = translator.translate(response, dest='fr')
-#     return result.text
-#
-#
-# result = convertLanguageToPreferred()
-# print(result)
+#CHECK IF LANGUAGE AND CURRENCY IS SUPPORTED
+if preferred_language not in supportedLanguage.keys():
+    error = "Language {} is not supported".format(preferred_language)
+    print(error)
+elif preferred_currency not in supportedCurrency.values():
+    error = "Currency symbol {} is not supported".format(preferred_currency)
+    print (error)
+else:
+    stockprice = StockTrack(stock_symbol, preferred_language, preferred_currency)
+    results = stockprice.convertLanguageToPreferred()
+    print (results)
