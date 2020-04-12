@@ -124,7 +124,7 @@ print("Available Languages are: {}".format(supportedLanguage))
 print('\n')
 
 #REQUEST FOR USER INPUTS FOR PROCESSING
-stock_symbol = input ("Enter stock symbol (kindly note only USA Stocks eg aapl) :").strip()
+stock_symbol = input ("Enter stock symbol (kindly note only USA Stocks eg aapl or msft) :").strip()
 preferred_language = input ("What is your preferred language:").strip()
 preferred_currency = input ("What is your preferred currency:").strip()
 print('\n')
