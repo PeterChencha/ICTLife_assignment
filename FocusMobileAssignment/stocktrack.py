@@ -102,7 +102,7 @@ def readAvailableCurrencies():
            currency = row["Currency"]
            code = row["ISO 4217 Code"]
            complete = currency + ", symbol = " + code
-           supportedCurrency[country] = complete
+           supportedCurrency[country] = code
     return supportedCurrency
 
 supportedCurrency = readAvailableCurrencies()
@@ -132,11 +132,18 @@ preferred_currency = input ("What is your preferred currency:").strip()
 if len(preferred_currency) == 0:
     preferred_currency = "USD"
 print('\n')
-stockprice = StockTrack(stock_symbol, preferred_language, preferred_currency)
-results = stockprice.convertLanguageToPreferred()
-print (results)
 
-
+#CHECK IF LANGUAGE AND CURRENCY IS SUPPORTED
+if preferred_language not in supportedLanguage.keys():
+    error = "Language {} is not supported".format(preferred_language)
+    print(error)
+elif preferred_currency not in supportedCurrency.values():
+    error = "Currency symbol {} is not supported".format(preferred_currency)
+    print (error)
+else:
+    stockprice = StockTrack(stock_symbol, preferred_language, preferred_currency)
+    results = stockprice.convertLanguageToPreferred()
+    print (results)
 
 #TEST API FUNCTIONS AND TRANSLATOR
 
