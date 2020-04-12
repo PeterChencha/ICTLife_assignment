@@ -59,7 +59,7 @@ class StockTrack(object):
             return rate
 
     def getConversationRateFixer(self):
-        #FOR THE FREE PLAN, BASE USD IS NOT SUPPORTED THUS FOR OUR APP ITS NOT HELPFUL
+        #FOR THE FREE PLAN, BASE "USD" IS NOT SUPPORTED THUS FOR OUR APP ITS NOT HELPFUL
         url = "http://data.fixer.io/api/latest?access_key={}&base=USD&symbols={}".format(self.fixeraccesskey, self.preferred_currency)
         req = requests.get(url)
         rate_data = req.json()
@@ -104,13 +104,16 @@ supportedLanguage = readAvailableLanguages()
 print("Available Languages are: {}".format(supportedLanguage))
 
 
+#REQUEST FOR USER INPUTS FOR PROCESSING
+
+
 #GOOGLE IMPLEMENTATION
-# input = input ("Enter stock symbol (kindly note only USA Stocks eg aapl) :")
-# preferred_language = input ("What is your preferred language:")
-# preferred_currency = input ("What is your preferred currency:")
-# stockprice = StockTrack(input, preferred_language, preferred_currency)
-# results = stockprice.getConversationRateLayer()
-# print (results)
+stock_symbol = input ("Enter stock symbol (kindly note only USA Stocks eg aapl) :")
+preferred_language = input ("What is your preferred language:")
+preferred_currency = input ("What is your preferred currency:")
+stockprice = StockTrack(stock_symbol, preferred_language, preferred_currency)
+results = stockprice.getConversationRateLayer()
+print (results)
 
 
 
