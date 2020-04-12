@@ -35,6 +35,8 @@ aapl
 
 #To run second assignment
 
+#Install additional packages inside virtual environment
+pip install -r requirements.txt
 #From project directory
 cd FocusMobileAssignment
 #Run second assignment
