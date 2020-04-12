@@ -92,10 +92,10 @@ class StockTrack(object):
             error = "Invalid stock symbol {}".format(self.symbol)
             return error
         else:
-            response = "The current price for {} is {} {}".format(self.symbol, preferred_price, self.preferred_currency)
+            response = "The current price for {} is".format(self.symbol)
             translator = Translator()
             result = translator.translate(response, dest=self.preferred_language)
-            return result.text
+            return result.text +" {}{}".format(preferred_price, self.preferred_currency)
 
 
 
