@@ -126,7 +126,11 @@ print('\n')
 #REQUEST FOR USER INPUTS FOR PROCESSING
 stock_symbol = input ("Enter stock symbol (kindly note only USA Stocks eg aapl or msft) :").strip()
 preferred_language = input ("What is your preferred language:").strip()
+if len(preferred_language) == 0:
+    preferred_language = "en"
 preferred_currency = input ("What is your preferred currency:").strip()
+if len(preferred_currency) == 0:
+    preferred_currency = "USD"
 print('\n')
 stockprice = StockTrack(stock_symbol, preferred_language, preferred_currency)
 results = stockprice.convertLanguageToPreferred()
