@@ -32,6 +32,13 @@ python stocktrack.py
 aapl
 #Expected output
 {'name': 'aapl', 'current_price': '241.41 USD'}
+
+#To run second assignment
+
+#From project directory
+cd FocusMobileAssignment
+#Run second assignment
+python stocktrack.py
 ```
 
 * [Python3](https://www.python.org/) - Python is a programming language that lets you work quickly
