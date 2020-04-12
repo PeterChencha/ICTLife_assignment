@@ -151,10 +151,10 @@ print('\n')
 if preferred_language not in supportedLanguage.keys():
     error = "Language {} is not supported".format(preferred_language)
     print(error)
-elif preferred_currency not in supportedCurrency.values():
+elif preferred_currency.upper() not in supportedCurrency.values():
     error = "Currency symbol {} is not supported".format(preferred_currency)
     print (error)
 else:
-    stockprice = StockTrack(stock_symbol, preferred_language, preferred_currency)
+    stockprice = StockTrack(stock_symbol, preferred_language, preferred_currency.upper())
     results = stockprice.convertLanguageToPreferred()
     print (results)
