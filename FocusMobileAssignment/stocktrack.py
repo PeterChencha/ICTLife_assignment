@@ -121,9 +121,6 @@ print("Available Languages are: {}".format(supportedLanguage))
 
 
 #REQUEST FOR USER INPUTS FOR PROCESSING
-
-
-#GOOGLE IMPLEMENTATION
 stock_symbol = input ("Enter stock symbol (kindly note only USA Stocks eg aapl) :")
 preferred_language = input ("What is your preferred language:")
 preferred_currency = input ("What is your preferred currency:")
