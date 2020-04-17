@@ -48,6 +48,14 @@ What is your preferred language(leave blank for english-en):pt
 What is your preferred currency(leave blank for USD):UGX
 #Expected output
 O preço atual para MSFT é 621396.1909325599UGX
+
+
+#To view third assignment
+
+#From project directory
+cd systemDesign
+#Download file
+file name : System design solution - PeterChencha.pdf
 ```
 
 * [Python3](https://www.python.org/) - Python is a programming language that lets you work quickly
